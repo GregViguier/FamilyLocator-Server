@@ -12,7 +12,11 @@ var indexRouter = require('./routes/index');
 var trackRouter = require('./routes/track');
 
 const mongoose = require('mongoose');
-const dbSettings = require('./config/db');
+
+var dbURI = process.env.MONGODB_URI;
+if (!process.env.MONGODB_URI) {
+  dbURI = require('./config/db').uri;
+}
 
 var app = express();
 
@@ -30,15 +34,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // MongoDB Setup
-mongoose.connect(dbSettings.url);
+mongoose.connect(dbURI);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MangoDB connection error:'));
-db.once('open', function () {
-  app.use(function (req, res, next) {
-    req.db = familyLocatorDb;
-    next();
-  });
-});
+
 // End of MongoDB Setup
 app.use('/', indexRouter);
 app.use('/track', trackRouter);

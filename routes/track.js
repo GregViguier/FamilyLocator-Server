@@ -8,6 +8,4 @@ router.post('/:name/:lat.:lng', controller.saveLocation);
 // GET all location for user 'name' since 'since' days
 router.get('/:name/:since', controller.findLocationsSince);
 
-
-
 module.exports = router;
